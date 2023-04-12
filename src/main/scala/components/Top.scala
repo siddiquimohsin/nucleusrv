@@ -1,6 +1,8 @@
 package nucleusrv.components
 import chisel3._
 import nucleusrv.tracer._
+import caravan.bus.common.{AbstrRequest, AbstrResponse, BusConfig, BusDevice, BusHost}
+import caravan.bus.tilelink.{TLRequest, TLResponse, TilelinkConfig, TilelinkAdapter}
 
 
 class Top(programFile:Option[String], dataFile:Option[String]) extends Module{
@@ -9,26 +11,33 @@ class Top(programFile:Option[String], dataFile:Option[String]) extends Module{
     val pin = Output(UInt(32.W))
   })
 
-  implicit val config:Configs = Configs(XLEN=32, M=true, C=true, TRACE=true)
+  implicit val config1:Configs = Configs(XLEN=32, M=true, C=true, TRACE=false)
+  implicit val config =TilelinkConfig()
 
   val core: Core = Module(new Core())
   core.io.stall := false.B
+
+  val imemAdapter = Module(new TilelinkAdapter()) //instrAdapter
+  val dmemAdapter = Module(new TilelinkAdapter()) //dmemAdapter
 
   val dmem = Module(new SRamTop(dataFile))
   val imem = Module(new SRamTop(programFile))
 
   /*  Imem Interceonnections  */
-  core.io.imemRsp <> imem.io.rsp
-  imem.io.req <> core.io.imemReq
-
+  imemAdapter.io.reqIn <> core.io.imemReq
+  core.io.imemRsp <> imemAdapter.io.rspOut
+  imem.io.req <> imemAdapter.io.reqOut
+  imemAdapter.io.rspIn <> imem.io.rsp
 
   /*  Dmem Interconnections  */
-  core.io.dmemRsp <> dmem.io.rsp
-  dmem.io.req <> core.io.dmemReq
+  dmemAdapter.io.reqIn <> core.io.dmemReq
+  core.io.dmemRsp <> dmemAdapter.io.rspOut
+  dmem.io.req <> dmemAdapter.io.reqOut
+  dmemAdapter.io.rspIn <> dmem.io.rsp
 
   io.pin := core.io.pin
 
-  if (config.TRACE) {
+  if (config1.TRACE) {
     val tracer = Module(new Tracer())
 
     Seq(

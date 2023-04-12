@@ -11,6 +11,7 @@ class SRamTop(val programFile:Option[String] ) extends Module {
         val rsp = Decoupled(new MemResponseIO)
     })
 
+    io.rsp.bits.error := false.B
     val validReg = RegInit(false.B)
     io.rsp.valid := validReg
     io.req.ready := true.B // assuming we are always ready to accept requests from device

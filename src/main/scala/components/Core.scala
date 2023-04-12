@@ -3,12 +3,12 @@ package nucleusrv.components
 import chisel3._
 import chisel3.util._
 
-class Core(implicit val config:Configs) extends Module{
+class Core(implicit val config1:Configs) extends Module{
 
-  val M      = config.M
-  val C      = config.C
-  val XLEN   = config.XLEN
-  val TRACE  = config.TRACE
+  val M      = config1.M
+  val C      = config1.C
+  val XLEN   = config1.XLEN
+  val TRACE  = config1.TRACE
 
   val io = IO(new Bundle {
     val pin: UInt = Output(UInt(32.W))
