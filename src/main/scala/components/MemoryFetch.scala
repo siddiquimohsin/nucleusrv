@@ -2,10 +2,10 @@
 package nucleusrv.components
 import chisel3._
 import chisel3.util._ 
+import caravan.bus.tilelink.TilelinkConfig
 
 
-
-class MemoryFetch extends Module {
+class MemoryFetch(implicit val config: TilelinkConfig) extends Module {
   val io = IO(new Bundle {
     val aluResultIn: UInt = Input(UInt(32.W))
     val writeData: UInt = Input(UInt(32.W))
@@ -18,6 +18,14 @@ class MemoryFetch extends Module {
     val dccmReq = Decoupled(new MemRequestIO)
     val dccmRsp = Flipped(Decoupled(new MemResponseIO))
   })
+
+  if(config.uh){
+    io.dccmReq.bits.size.get := 0.U
+    io.dccmReq.bits.param.get := 0.U
+    io.dccmReq.bits.is_arithmetic.get := false.B
+    io.dccmReq.bits.is_intent.get := false.B
+    io.dccmReq.bits.is_logical.get := false.B
+  }
 
   io.dccmRsp.ready := true.B
 

@@ -2,9 +2,9 @@
 package nucleusrv.components
 import chisel3._
 import chisel3.util._ 
+import caravan.bus.tilelink.TilelinkConfig
 
-
-class InstructionFetch extends Module {
+class InstructionFetch(implicit val config:TilelinkConfig) extends Module {
   val io = IO(new Bundle {
     val address: UInt = Input(UInt(32.W))
     val instruction: UInt = Output(UInt(32.W))
@@ -12,6 +12,13 @@ class InstructionFetch extends Module {
     val coreInstrReq = Decoupled(new MemRequestIO)
     val coreInstrResp = Flipped(Decoupled(new MemResponseIO))
   })
+    if(config.uh){
+      io.coreInstrReq.bits.is_logical.get := false.B
+      io.coreInstrReq.bits.param.get := 0.U
+      io.coreInstrReq.bits.is_intent.get := false.B
+      io.coreInstrReq.bits.size.get := 0.U
+      io.coreInstrReq.bits.is_arithmetic.get := false.B
+    }
 
   val rst = Wire(Bool())
   rst := reset.asBool()

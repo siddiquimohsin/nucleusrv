@@ -12,7 +12,7 @@ class Top(programFile:Option[String], dataFile:Option[String]) extends Module{
   })
 
   implicit val config1:Configs = Configs(XLEN=32, M=true, C=true, TRACE=false)
-  implicit val config =TilelinkConfig()
+  implicit val config =TilelinkConfig(uh = true)
 
   val core: Core = Module(new Core())
   core.io.stall := false.B
@@ -20,8 +20,8 @@ class Top(programFile:Option[String], dataFile:Option[String]) extends Module{
   val imemAdapter = Module(new TilelinkAdapter()) //instrAdapter
   val dmemAdapter = Module(new TilelinkAdapter()) //dmemAdapter
 
-  val dmem = Module(new SRamTop(dataFile))
-  val imem = Module(new SRamTop(programFile))
+  val dmem = Module(new SRamTop(dataFile,config))
+  val imem = Module(new SRamTop(programFile,config))
 
   /*  Imem Interceonnections  */
   imemAdapter.io.reqIn <> core.io.imemReq

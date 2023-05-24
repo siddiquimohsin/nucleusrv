@@ -2,8 +2,8 @@ package nucleusrv.components
 
 import chisel3._
 import chisel3.util._
-
-class Core(implicit val config1:Configs) extends Module{
+import caravan.bus.tilelink.TilelinkConfig
+class Core(implicit val config1:Configs,implicit val config:TilelinkConfig) extends Module{
 
   val M      = config1.M
   val C      = config1.C

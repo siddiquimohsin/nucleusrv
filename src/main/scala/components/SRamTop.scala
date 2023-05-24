@@ -4,8 +4,8 @@ import chisel3._
 import chisel3.util._
 import chisel3.experimental._
 import chisel3.util.experimental._
-
-class SRamTop(val programFile:Option[String] ) extends Module {
+import caravan.bus.tilelink.TilelinkConfig
+class SRamTop(val programFile:Option[String],implicit val config:TilelinkConfig) extends Module {
     val io = IO(new Bundle {
         val req = Flipped(Decoupled(new MemRequestIO))
         val rsp = Decoupled(new MemResponseIO)
