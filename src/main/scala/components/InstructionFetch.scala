@@ -13,11 +13,11 @@ class InstructionFetch(implicit val config:TilelinkConfig) extends Module {
     val coreInstrResp = Flipped(Decoupled(new MemResponseIO))
   })
     if(config.uh){
-      io.coreInstrReq.bits.is_logical.get := false.B
+      io.coreInstrReq.bits.isLogical.get := false.B
       io.coreInstrReq.bits.param.get := 0.U
-      io.coreInstrReq.bits.is_intent.get := false.B
+      io.coreInstrReq.bits.isIntent.get := false.B
       io.coreInstrReq.bits.size.get := 0.U
-      io.coreInstrReq.bits.is_arithmetic.get := false.B
+      io.coreInstrReq.bits.isArithmetic.get := false.B
     }
 
   val rst = Wire(Bool())

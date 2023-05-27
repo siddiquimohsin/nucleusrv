@@ -22,9 +22,9 @@ class MemoryFetch(implicit val config: TilelinkConfig) extends Module {
   if(config.uh){
     io.dccmReq.bits.size.get := 0.U
     io.dccmReq.bits.param.get := 0.U
-    io.dccmReq.bits.is_arithmetic.get := false.B
-    io.dccmReq.bits.is_intent.get := false.B
-    io.dccmReq.bits.is_logical.get := false.B
+    io.dccmReq.bits.isArithmetic.get := false.B
+    io.dccmReq.bits.isIntent.get := false.B
+    io.dccmReq.bits.isLogical.get := false.B
   }
 
   io.dccmRsp.ready := true.B

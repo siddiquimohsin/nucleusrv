@@ -12,7 +12,7 @@ class Top(programFile:Option[String], dataFile:Option[String]) extends Module{
   })
 
   implicit val config1:Configs = Configs(XLEN=32, M=true, C=true, TRACE=false)
-  implicit val config =TilelinkConfig(uh = true)
+  implicit val config =TilelinkConfig(uh= true, z = 8)
 
   val core: Core = Module(new Core())
   core.io.stall := false.B
